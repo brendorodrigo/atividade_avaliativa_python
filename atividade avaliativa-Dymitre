@@ -1,0 +1,166 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+class Desenvolvedor:
+    _id_counter = 1
+
+    def __init__(self, nome, senioridade, pontos_por_dia, linguagem):
+        self.id = Desenvolvedor._id_counter
+        Desenvolvedor._id_counter += 1
+        self.nome = nome
+        self.senioridade = senioridade
+        self.pontos_por_dia = pontos_por_dia
+        self.linguagem = linguagem
+
+    @classmethod
+    def cadastrar_desenvolvedor(cls, data):
+        return cls(
+            nome=data["nome"],
+            senioridade=data["senioridade"],
+            pontos_por_dia=data["pontos_por_dia"],
+            linguagem=data["linguagem"]
+        )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nome": self.nome,
+            "senioridade": self.senioridade,
+            "pontos_por_dia": self.pontos_por_dia,
+            "linguagem": self.linguagem
+        }
+
+
+class Projeto:
+    _id_counter = 1
+
+    def __init__(self, descricao, prazo_dias, pontos_funcao):
+        self.id = Projeto._id_counter
+        Projeto._id_counter += 1
+        self.descricao = descricao
+        self.prazo_dias = prazo_dias
+        self.pontos_funcao = pontos_funcao
+        self.desenvolvedores = []
+
+    @classmethod
+    def criar_projeto(cls, data):
+        return cls(
+            descricao=data["descricao"],
+            prazo_dias=data["prazo_dias"],
+            pontos_funcao=data["pontos_funcao"]
+        )
+
+    def adicionar_desenvolvedor(self, dev):
+        self.desenvolvedores.append(dev)
+
+    def calcular_capacidade_total(self):
+        total_por_dia = sum(d.pontos_por_dia for d in self.desenvolvedores)
+        return total_por_dia * self.prazo_dias
+
+    def verificar_viabilidade(self):
+        capacidade = self.calcular_capacidade_total()
+        if capacidade >= self.pontos_funcao:
+            return {
+                "status": "viavel",
+                "capacidade_total": capacidade,
+                "pontos_necessarios": self.pontos_funcao
+            }
+        else:
+            return {
+                "status": "inviavel",
+                "capacidade_total": capacidade,
+                "pontos_necessarios": self.pontos_funcao
+            }
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "descricao": self.descricao,
+            "prazo_dias": self.prazo_dias,
+            "pontos_funcao": self.pontos_funcao,
+            "desenvolvedores": [d.to_dict() for d in self.desenvolvedores]
+        }
+
+
+desenvolvedores_db = {}
+projetos_db = {}
+
+@app.route("/desenvolvedores", methods=["POST"])
+def criar_desenvolvedor():
+    data = request.json
+    dev = Desenvolvedor.cadastrar_desenvolvedor(data)
+    desenvolvedores_db[dev.id] = dev
+    return jsonify(dev.to_dict()), 201
+
+
+@app.route("/desenvolvedores", methods=["GET"])
+def listar_desenvolvedores():
+    return jsonify([d.to_dict() for d in desenvolvedores_db.values()])
+
+
+@app.route("/desenvolvedores/<int:id>", methods=["GET"])
+def obter_desenvolvedor(id):
+    dev = desenvolvedores_db.get(id)
+    if not dev:
+        return jsonify({"erro": "Desenvolvedor não encontrado"}), 404
+    return jsonify(dev.to_dict())
+
+
+@app.route("/projetos", methods=["POST"])
+def criar_projeto():
+    data = request.json
+    projeto = Projeto.criar_projeto(data)
+    projetos_db[projeto.id] = projeto
+    return jsonify(projeto.to_dict()), 201
+
+
+@app.route("/projetos", methods=["GET"])
+def listar_projetos():
+    return jsonify([p.to_dict() for p in projetos_db.values()])
+
+
+@app.route("/projetos/<int:id>", methods=["GET"])
+def obter_projeto(id):
+    projeto = projetos_db.get(id)
+    if not projeto:
+        return jsonify({"erro": "Projeto não encontrado"}), 404
+    return jsonify(projeto.to_dict())
+
+
+@app.route("/projetos/<int:id>/desenvolvedores", methods=["POST"])
+def adicionar_dev_ao_projeto(id):
+    projeto = projetos_db.get(id)
+    if not projeto:
+        return jsonify({"erro": "Projeto não encontrado"}), 404
+
+    data = request.json
+    dev = desenvolvedores_db.get(data["desenvolvedor_id"])
+
+    if not dev:
+        return jsonify({"erro": "Desenvolvedor não encontrado"}), 404
+
+    projeto.adicionar_desenvolvedor(dev)
+    return jsonify({"mensagem": "Desenvolvedor adicionado ao projeto"}), 200
+
+
+@app.route("/projetos/<int:id>/desenvolvedores", methods=["GET"])
+def listar_devs_do_projeto(id):
+    projeto = projetos_db.get(id)
+    if not projeto:
+        return jsonify({"erro": "Projeto não encontrado"}), 404
+
+    return jsonify([d.to_dict() for d in projeto.desenvolvedores])
+
+
+@app.route("/projetos/<int:id>/viabilidade", methods=["GET"])
+def verificar_viabilidade(id):
+    projeto = projetos_db.get(id)
+    if not projeto:
+        return jsonify({"erro": "Projeto não encontrado"}), 404
+
+    return jsonify(projeto.verificar_viabilidade())
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
