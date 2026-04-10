@@ -1,0 +1,184 @@
+### API de Gerenciamento de Projetos e Desenvolvedores
+### Exemplos de requisições HTTP
+
+@baseUrl = http://localhost:8000
+
+### ==================== HEALTH CHECK ====================
+
+### Verificar saúde da API
+GET {{baseUrl}}/health
+
+
+### ==================== DESENVOLVEDORES ====================
+
+### Criar desenvolvedor - João (Pleno)
+POST {{baseUrl}}/desenvolvedores
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "senioridade": "Pleno",
+  "pontos_por_dia": 5,
+  "linguagem": "Python"
+}
+
+### Criar desenvolvedor - Maria (Senior)
+POST {{baseUrl}}/desenvolvedores
+Content-Type: application/json
+
+{
+  "nome": "Maria Santos",
+  "senioridade": "Senior",
+  "pontos_por_dia": 8,
+  "linguagem": "Python"
+}
+
+### Criar desenvolvedor - Pedro (Junior)
+POST {{baseUrl}}/desenvolvedores
+Content-Type: application/json
+
+{
+  "nome": "Pedro Costa",
+  "senioridade": "Junior",
+  "pontos_por_dia": 2,
+  "linguagem": "JavaScript"
+}
+
+### Listar todos os desenvolvedores
+GET {{baseUrl}}/desenvolvedores
+
+### Obter desenvolvedor específico (ID = 1)
+GET {{baseUrl}}/desenvolvedores/1
+
+
+### ==================== PROJETOS ====================
+
+### Criar projeto - Sistema de pagamentos
+POST {{baseUrl}}/projetos
+Content-Type: application/json
+
+{
+  "descricao": "Sistema de pagamentos",
+  "prazo_dias": 30,
+  "pontos_funcao": 200
+}
+
+### Criar projeto - App mobile
+POST {{baseUrl}}/projetos
+Content-Type: application/json
+
+{
+  "descricao": "App mobile",
+  "prazo_dias": 45,
+  "pontos_funcao": 300
+}
+
+### Criar projeto - Dashboard Analytics
+POST {{baseUrl}}/projetos
+Content-Type: application/json
+
+{
+  "descricao": "Dashboard Analytics",
+  "prazo_dias": 20,
+  "pontos_funcao": 100
+}
+
+### Listar todos os projetos
+GET {{baseUrl}}/projetos
+
+### Obter projeto específico (ID = 1)
+GET {{baseUrl}}/projetos/1
+
+
+### ==================== ALOCAÇÃO DE DESENVOLVEDORES ====================
+
+### Adicionar desenvolvedor ao projeto (dev 1 ao projeto 1)
+POST {{baseUrl}}/projetos/1/desenvolvedores
+Content-Type: application/json
+
+{
+  "desenvolvedor_id": 1
+}
+
+### Adicionar desenvolvedor ao projeto (dev 2 ao projeto 1)
+POST {{baseUrl}}/projetos/1/desenvolvedores
+Content-Type: application/json
+
+{
+  "desenvolvedor_id": 2
+}
+
+### Adicionar desenvolvedor ao projeto (dev 3 ao projeto 2)
+POST {{baseUrl}}/projetos/2/desenvolvedores
+Content-Type: application/json
+
+{
+  "desenvolvedor_id": 3
+}
+
+### Listar desenvolvedores do projeto (projeto 1)
+GET {{baseUrl}}/projetos/1/desenvolvedores
+
+### Listar desenvolvedores do projeto (projeto 2)
+GET {{baseUrl}}/projetos/2/desenvolvedores
+
+
+### ==================== VIABILIDADE ====================
+
+### Verificar viabilidade do projeto 1
+GET {{baseUrl}}/projetos/1/viabilidade
+
+### Verificar viabilidade do projeto 2
+GET {{baseUrl}}/projetos/2/viabilidade
+
+### Verificar viabilidade do projeto 3
+GET {{baseUrl}}/projetos/3/viabilidade
+
+
+### ==================== CENÁRIOS DE TESTE ====================
+
+### Cenário: Projeto viável com desenvolvedores suficientes
+# 1. Criar projeto com 100 pontos, 20 dias
+# 2. Alocar 1 desenvolvedor Senior (8 pt/dia) → 8 * 20 = 160 pontos
+# 3. Verificar viabilidade → Deve ser VIÁVEL (160 >= 100)
+
+POST {{baseUrl}}/projetos
+Content-Type: application/json
+
+{
+  "descricao": "Cenário Viável",
+  "prazo_dias": 20,
+  "pontos_funcao": 100
+}
+
+###
+
+POST {{baseUrl}}/projetos/4/desenvolvedores
+Content-Type: application/json
+
+{
+  "desenvolvedor_id": 2
+}
+
+###
+
+GET {{baseUrl}}/projetos/4/viabilidade
+
+
+### Cenário: Projeto inviável (sem desenvolvedores)
+# 1. Criar projeto com 500 pontos
+# 2. Não alocar nenhum desenvolvedor
+# 3. Verificar viabilidade → Deve ser INVIÁVEL
+
+POST {{baseUrl}}/projetos
+Content-Type: application/json
+
+{
+  "descricao": "Cenário Inviável - Sem Desenvolvedores",
+  "prazo_dias": 10,
+  "pontos_funcao": 500
+}
+
+###
+
+GET {{baseUrl}}/projetos/5/viabilidade
