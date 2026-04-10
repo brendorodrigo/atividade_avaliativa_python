@@ -1,10 +1,10 @@
 # Documentação Técnica - Atividade Avaliativa NPC I
 
-## 📋 Descrição da Atividade
+## Descrição da Atividade
 
 Implementação de um sistema de gerenciamento de projetos e desenvolvedores com análise de viabilidade de projetos através de uma API REST.
 
-## 🏗️ Diagrama de Classes
+## Diagrama de Classes
 
 ```
 ┌─────────────────────────────┐
@@ -38,37 +38,19 @@ Implementação de um sistema de gerenciamento de projetos e desenvolvedores com
 └─────────────────────────────┘
 ```
 
-## 📊 Fluxo de Viabilidade
+## Fluxo de Viabilidade
 
-```
-                    ANÁLISE DE VIABILIDADE
-                           │
-                    ┌──────┴──────┐
-                    │             │
-            Há desenvolvedores?   │
-               SIM│   │NÃO        │
-                  │   └──→ INVIÁVEL│
-                  │                │
-          Calcular Capacidade      │
-                  │                │
-          capacidade = Σ(pontos_por_dia × prazo_dias)
-                  │
-          ┌───────┴────────┐
-          │                │
-    capacidade >= VIÁVEL   INVIÁVEL
-    pontos_funcao?
-         │
-       SIM │ NÃO
-```
+![Fluxo de Viabilidade](images/Fluxo.drawio.png)
 
-## 🔧 Tecnologias Utilizadas
+
+## Tecnologias Utilizadas
 
 - **Framework**: FastAPI (Python)
 - **Validação**: Pydantic
 - **Servidor**: Uvicorn
 - **Documentação**: Swagger/ReDoc (automático)
 
-## 📝 Especificações de Implementação
+## Especificações de Implementação
 
 ### Classe Desenvolvedor
 
@@ -123,7 +105,7 @@ class Projeto:
 }
 ```
 
-## 🔌 Endpoints da API
+## Endpoints da API
 
 ### Desenvolvedores
 
@@ -144,7 +126,7 @@ class Projeto:
 | GET | /projetos/{id}/desenvolvedores | Listar desenvolvedores |
 | GET | /projetos/{id}/viabilidade | Verificar viabilidade |
 
-## 📈 Lógica de Cálculo de Viabilidade
+## Lógica de Cálculo de Viabilidade
 
 **Fórmula:**
 ```
@@ -167,7 +149,7 @@ Desenvolvedores alocados:
 
 **Resultado:** 390 ≥ 200 → ✅ **VIÁVEL**
 
-## 🎯 Resposta de Viabilidade
+## Resposta de Viabilidade
 
 ```json
 {
@@ -183,7 +165,7 @@ Desenvolvedores alocados:
 }
 ```
 
-## 🚀 Como Iniciar
+## Como Iniciar
 
 ### 1. Instalação de dependências
 ```bash
@@ -205,7 +187,7 @@ http://localhost:8000/docs
 python test_api.py
 ```
 
-## 📁 Estrutura de Arquivos
+## Estrutura de Arquivos
 
 ```
 Atividade-Avaliativa-Python-Marcos_Maciel/
@@ -219,7 +201,7 @@ Atividade-Avaliativa-Python-Marcos_Maciel/
 └── SPEC.md              # Esta documentação técnica
 ```
 
-## 🧪 Casos de Teste
+## Casos de Teste
 
 ### Caso 1: Projeto Viável
 ```
@@ -242,7 +224,7 @@ Atividade-Avaliativa-Python-Marcos_Maciel/
 3. Resultado: 20 < 300 ❌ INVIÁVEL (DEFICIT: 280)
 ```
 
-## 🔐 Tratamento de Erros
+## Tratamento de Erros
 
 A API retorna:
 
@@ -254,17 +236,17 @@ A API retorna:
 | 404 | Recurso não encontrado |
 | 500 | Erro interno do servidor |
 
-## 💡 Características Adicionais
+## Características Adicionais
 
-✅ Validação automática de dados (Pydantic)
-✅ Documentação automática (Swagger/ReDoc)
-✅ CORS habilitado
-✅ Incrementadores automáticos de ID
-✅ Tratamento de erros consistente
-✅ Armazenamento em memória
-✅ Exemplos de requisições HTTP
+- Validação automática de dados (Pydantic)
+- Documentação automática (Swagger/ReDoc)
+- CORS habilitado
+- Incrementadores automáticos de ID
+- Tratamento de erros consistente
+- Armazenamento em memória
+- Exemplos de requisições HTTP
 
-## 📚 Referências
+## Referências
 
 - FastAPI: https://fastapi.tiangolo.com/
 - Pydantic: https://docs.pydantic.dev/
