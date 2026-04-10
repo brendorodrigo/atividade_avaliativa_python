@@ -63,4 +63,3 @@ GET /projetos/{id}/desenvolvedores
 GET /projetos/{id}/viabilidade
 
 </pre>
-
