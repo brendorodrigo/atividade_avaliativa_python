@@ -1,66 +1,22 @@
-<h1> Atividade Avaliativa para NPC I</h1>
-<ul>
-<li>Implemente a organização das classes Projetos e Desenvolvedores</li>
-<pre>
-Projeto:
-  Atributos:
-    - ID
-    - Descrição
-    - Prazo em dias
-    - Pontos de função
-    - [Desenvolvedores]
-  Metodos:
-    - criar_projeto
-    - adicionar_desenvolvedor
-    - calcular_capacidade_total
-    - verificar_viabilidade
-      - projeto viável
-      - projeto inviável
-</pre>
-<pre>
-Desenvolvedor:
-  - id
-  - Nome
-  - Senioridade
-  - Pontos por dia
-  - Linguagem
+# API de Projetos e Desenvolvedores
 
-  Metodos: 
-  - cadastrar_desenvolvedor
-</pre>
+Projeto desenvolvido em Python utilizando Flask.
 
-<li>Criar as seguintes APIs com os seguintes retornos</li>
+## Funcionalidades
 
+- Cadastro de desenvolvedores
+- Listagem de desenvolvedores
+- Criação de projetos
+- Adição de desenvolvedores a projetos
+- Verificação de viabilidade de projetos
 
-Desenvolvedores: 
-<pre>
-POST /desenvolvedores
-        body: {
-            "nome": "João",
-            "senioridade": "Pleno",
-            "pontos_por_dia": 5,
-            "linguagem": "Python"
-        }
-GET /desenvolvedores
-GET /desenvolvedores/{id}
-</pre>
+## Como executar
 
-Projeto: 
-<pre>
-POST /projetos
-        body: {
-            "descricao": "Sistema de pagamentos",
-            "prazo_dias": 30,
-            "pontos_funcao": 200
-        } 
-POST /projetos/{id}/desenvolvedores
-        body: {
-            "desenvolvedor_id": 1
-        }
-GET /projetos
-GET /projetos/{id}
-GET /projetos/{id}/desenvolvedores
-GET /projetos/{id}/viabilidade
+1. Instalar dependências:
+pip install flask
 
-</pre>
+2. Executar:
+python app.py
 
+3. Acessar:
+http://127.0.0.1:5000
