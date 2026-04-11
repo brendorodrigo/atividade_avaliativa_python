@@ -26,7 +26,7 @@ class Tarefa:
             return None
         return self.esforco_total / self.responsavel.produtividade
 
-# --- APP FLASK ---
+# --- APP FLASK ----
 
 app = Flask(__name__)
 
